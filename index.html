@@ -1220,21 +1220,47 @@
 
             btn.textContent = 'Joining...';
             btn.style.opacity = '0.7';
+            btn.disabled = true;
 
-            setTimeout(function() {
-                window.open('https://twenty84.beehiiv.com/subscribe?email=' + encodeURIComponent(email), '_blank');
-                btn.textContent = "You're in!";
+            fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.ok) {
+                    btn.textContent = "You're in!";
+                    btn.style.background = '#22c55e';
+                    btn.style.borderColor = '#22c55e';
+                    input.value = '';
+                } else {
+                    btn.textContent = data.error || 'Try again';
+                    btn.style.background = '#ef4444';
+                    btn.style.borderColor = '#ef4444';
+                }
                 btn.style.opacity = '1';
-                btn.style.background = '#22c55e';
-                btn.style.borderColor = '#22c55e';
-                input.value = '';
+                btn.disabled = false;
 
                 setTimeout(function() {
                     btn.textContent = orig;
                     btn.style.background = '#1a1a1a';
                     btn.style.borderColor = '#1a1a1a';
                 }, 3000);
-            }, 600);
+            })
+            .catch(function() {
+                btn.textContent = 'Try again';
+                btn.style.opacity = '1';
+                btn.style.background = '#ef4444';
+                btn.style.borderColor = '#ef4444';
+                btn.disabled = false;
+
+                setTimeout(function() {
+                    btn.textContent = orig;
+                    btn.style.background = '#1a1a1a';
+                    btn.style.borderColor = '#1a1a1a';
+                }, 3000);
+            });
         }
 
         // ── FAQ accordion ──
