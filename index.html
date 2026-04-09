@@ -470,6 +470,99 @@
             transform: scale(0.97);
         }
 
+        /* ═══════════════════════════════════════
+           PHONE INPUT
+           ═══════════════════════════════════════ */
+        .phone-row {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            max-width: 440px;
+            margin: 0 auto 12px;
+            position: relative;
+        }
+
+        .phone-row .country-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 14px 32px 14px 16px;
+            border: 1.5px solid #ddd;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            min-width: 100px;
+            max-width: 100px;
+        }
+
+        .phone-row .country-select:focus {
+            border-color: #999;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.03);
+        }
+
+        .phone-row input[type="tel"] {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 0 8px 8px 0;
+            background: #fff;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .phone-row input[type="tel"]::placeholder {
+            color: #b5b5b5;
+        }
+
+        .phone-row input[type="tel"]:focus {
+            border-color: #999;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.03);
+        }
+
+        .phone-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 440px;
+            margin: 0 auto 8px;
+            font-size: 11px;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #25D366;
+        }
+
+        .phone-label svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .whatsapp-note {
+            max-width: 440px;
+            margin: 0 auto 20px;
+            font-size: 12px;
+            color: #999;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        @media (max-width: 700px) {
+            .phone-row .country-select {
+                min-width: 90px;
+                max-width: 90px;
+                padding: 14px 28px 14px 12px;
+            }
+        }
+
         .proof {
             display: flex;
             align-items: center;
@@ -827,13 +920,14 @@
            RESPONSIVE
            ═══════════════════════════════════════ */
         @media (max-width: 900px) {
-            .ascii { font-size: 10px; }
+            .ascii { font-size: 8px; }
             .plane { font-size: 6px; }
-            .plane-2, .plane-3 { display: none; }
+            .plane-2 { font-size: 5px; }
+            .plane-3 { font-size: 4px; }
         }
 
         @media (max-width: 700px) {
-            .ascii-bg { display: none; }
+            .ascii-bg { opacity: 0.5; }
 
             body::before { background-size: 24px 24px; }
 
@@ -1005,7 +1099,7 @@
         <section class="hero">
             <div class="badge hero-enter">Twenty84 Newsletter</div>
 
-            <h1 class="hero-enter">The practical AI newsletter<br>for builders &amp; operators</h1>
+            <h1 class="hero-enter">The practical AI community<br>for builders &amp; operators</h1>
 
             <p class="sub hero-enter">
                 Weekly workflows, playbooks, and tools that help you
@@ -1013,9 +1107,21 @@
                 Built for Africa.
             </p>
 
-            <form class="form-row hero-enter" onsubmit="handleSignup(event)">
-                <input type="email" placeholder="Enter your email" required aria-label="Email address">
-                <button type="submit">Join Free</button>
+            <form class="signup-form hero-enter" onsubmit="handleSignup(event)">
+                <div class="form-row">
+                    <input type="email" placeholder="Enter your email" required aria-label="Email address">
+                    <button type="submit">Join Free</button>
+                </div>
+
+                <div class="phone-label">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Optional — Join the WhatsApp group
+                </div>
+                <div class="phone-row">
+                    <select class="country-select" aria-label="Country code"></select>
+                    <input type="tel" placeholder="Phone number" aria-label="Phone number">
+                </div>
+                <p class="whatsapp-note">Add your number to get added to our WhatsApp community for real-time discussions between issues.</p>
             </form>
 
             <div class="proof hero-enter">
@@ -1150,9 +1256,21 @@
             <h2 class="reveal">Ready to build smarter?</h2>
             <p class="sub reveal">Join the newsletter. One email every Thursday.</p>
 
-            <form class="form-row reveal" onsubmit="handleSignup(event)">
-                <input type="email" placeholder="Enter your email" required aria-label="Email address">
-                <button type="submit">Join Free</button>
+            <form class="signup-form reveal" onsubmit="handleSignup(event)">
+                <div class="form-row">
+                    <input type="email" placeholder="Enter your email" required aria-label="Email address">
+                    <button type="submit">Join Free</button>
+                </div>
+
+                <div class="phone-label">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Optional — Join the WhatsApp group
+                </div>
+                <div class="phone-row">
+                    <select class="country-select" aria-label="Country code"></select>
+                    <input type="tel" placeholder="Phone number" aria-label="Phone number">
+                </div>
+                <p class="whatsapp-note">Add your number to get added to our WhatsApp community for real-time discussions between issues.</p>
             </form>
 
             <div class="proof reveal">
@@ -1210,22 +1328,70 @@
             }, { passive: true });
         })();
 
+        // ── Country codes ──
+        var countryCodes = [
+            { code: '+27', country: 'ZA', flag: '\ud83c\uddff\ud83c\udde6' },
+            { code: '+234', country: 'NG', flag: '\ud83c\uddf3\ud83c\uddec' },
+            { code: '+254', country: 'KE', flag: '\ud83c\uddf0\ud83c\uddea' },
+            { code: '+233', country: 'GH', flag: '\ud83c\uddec\ud83c\udded' },
+            { code: '+255', country: 'TZ', flag: '\ud83c\uddf9\ud83c\uddff' },
+            { code: '+256', country: 'UG', flag: '\ud83c\uddfa\ud83c\uddec' },
+            { code: '+250', country: 'RW', flag: '\ud83c\uddf7\ud83c\uddfc' },
+            { code: '+251', country: 'ET', flag: '\ud83c\uddea\ud83c\uddf9' },
+            { code: '+20', country: 'EG', flag: '\ud83c\uddea\ud83c\uddec' },
+            { code: '+212', country: 'MA', flag: '\ud83c\uddf2\ud83c\udde6' },
+            { code: '+263', country: 'ZW', flag: '\ud83c\uddff\ud83c\uddfc' },
+            { code: '+260', country: 'ZM', flag: '\ud83c\uddff\ud83c\uddf2' },
+            { code: '+267', country: 'BW', flag: '\ud83c\udde7\ud83c\uddfc' },
+            { code: '+264', country: 'NA', flag: '\ud83c\uddf3\ud83c\udde6' },
+            { code: '+230', country: 'MU', flag: '\ud83c\uddf2\ud83c\uddfa' },
+            { code: '+1', country: 'US', flag: '\ud83c\uddfa\ud83c\uddf8' },
+            { code: '+44', country: 'GB', flag: '\ud83c\uddec\ud83c\udde7' },
+            { code: '+61', country: 'AU', flag: '\ud83c\udde6\ud83c\uddfa' },
+            { code: '+91', country: 'IN', flag: '\ud83c\uddee\ud83c\uddf3' },
+            { code: '+971', country: 'AE', flag: '\ud83c\udde6\ud83c\uddea' },
+            { code: '+49', country: 'DE', flag: '\ud83c\udde9\ud83c\uddea' },
+            { code: '+33', country: 'FR', flag: '\ud83c\uddeb\ud83c\uddf7' },
+            { code: '+31', country: 'NL', flag: '\ud83c\uddf3\ud83c\uddf1' },
+            { code: '+351', country: 'PT', flag: '\ud83c\uddf5\ud83c\uddf9' },
+            { code: '+55', country: 'BR', flag: '\ud83c\udde7\ud83c\uddf7' },
+            { code: '+86', country: 'CN', flag: '\ud83c\udde8\ud83c\uddf3' },
+            { code: '+81', country: 'JP', flag: '\ud83c\uddef\ud83c\uddf5' },
+        ];
+
+        // Populate all country select dropdowns
+        document.querySelectorAll('.country-select').forEach(function(select) {
+            countryCodes.forEach(function(c) {
+                var opt = document.createElement('option');
+                opt.value = c.code;
+                opt.textContent = c.flag + ' ' + c.code;
+                select.appendChild(opt);
+            });
+        });
+
         // ── Form signup ──
         function handleSignup(e) {
             e.preventDefault();
-            var btn = e.target.querySelector('button');
-            var input = e.target.querySelector('input');
-            var email = input.value;
+            var form = e.target;
+            var btn = form.querySelector('button');
+            var emailInput = form.querySelector('input[type="email"]');
+            var phoneInput = form.querySelector('input[type="tel"]');
+            var countrySelect = form.querySelector('.country-select');
+            var email = emailInput.value;
+            var phone = phoneInput && phoneInput.value.trim() ? countrySelect.value + phoneInput.value.trim().replace(/^0+/, '') : '';
             var orig = btn.textContent;
 
             btn.textContent = 'Joining...';
             btn.style.opacity = '0.7';
             btn.disabled = true;
 
+            var payload = { email: email };
+            if (phone) payload.phone = phone;
+
             fetch('/api/subscribe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email })
+                body: JSON.stringify(payload)
             })
             .then(function(res) { return res.json(); })
             .then(function(data) {
@@ -1233,7 +1399,8 @@
                     btn.textContent = "You're in!";
                     btn.style.background = '#22c55e';
                     btn.style.borderColor = '#22c55e';
-                    input.value = '';
+                    emailInput.value = '';
+                    if (phoneInput) phoneInput.value = '';
                 } else {
                     btn.textContent = data.error || 'Try again';
                     btn.style.background = '#ef4444';
