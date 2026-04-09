@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twenty84 — The AI Newsletter for African Builders</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* Subtle dot grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: radial-gradient(circle, #e0e0e0 0.7px, transparent 0.7px);
+            background-size: 28px 28px;
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ═══════════════════════════════════════
+           SCROLL ANIMATIONS
+           ═══════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered children */
+        .reveal-stagger > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-stagger.visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+        .reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; }
+        .reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; }
+        .reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; }
+        .reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.32s; }
+
+        /* Scale-in variant */
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.96) translateY(16px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Hero entrance — plays on load, not scroll */
+        .hero-enter {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-enter:nth-child(1) { animation-delay: 0.1s; }
+        .hero-enter:nth-child(2) { animation-delay: 0.25s; }
+        .hero-enter:nth-child(3) { animation-delay: 0.4s; }
+        .hero-enter:nth-child(4) { animation-delay: 0.55s; }
+        .hero-enter:nth-child(5) { animation-delay: 0.65s; }
+
+        @keyframes heroIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══════════════════════════════════════
+           ASCII ART DECORATIONS
+           ═══════════════════════════════════════ */
+        .ascii-bg {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .ascii {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #b0b0b0;
+            white-space: pre;
+            line-height: 1.15;
+            user-select: none;
+            opacity: 0;
+            animation: asciiIn 1.5s ease forwards;
+        }
+
+        .ascii:nth-child(1) { animation-delay: 0.3s; }
+        .ascii:nth-child(2) { animation-delay: 0.6s; }
+        .ascii:nth-child(3) { animation-delay: 0.9s; }
+        .ascii:nth-child(4) { animation-delay: 0.4s; }
+        .ascii:nth-child(5) { animation-delay: 0.7s; }
+        .ascii:nth-child(6) { animation-delay: 1.0s; }
+        .ascii:nth-child(7) { animation-delay: 0.5s; }
+        .ascii:nth-child(8) { animation-delay: 0.8s; }
+        .ascii:nth-child(9) { animation-delay: 1.1s; }
+        .ascii:nth-child(10) { animation-delay: 1.3s; }
+        .ascii:nth-child(11) { animation-delay: 0.35s; }
+        .ascii:nth-child(12) { animation-delay: 1.5s; }
+        .ascii:nth-child(13) { animation-delay: 0.75s; }
+        .ascii:nth-child(14) { animation-delay: 1.2s; }
+
+        @keyframes asciiIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Floating animations */
+        .ascii.f1 { animation: asciiIn 1.5s ease forwards, bob1 7s ease-in-out 1.5s infinite; }
+        .ascii.f2 { animation: asciiIn 1.5s ease forwards, bob2 9s ease-in-out 1.5s infinite; }
+        .ascii.f3 { animation: asciiIn 1.5s ease forwards, bob3 11s ease-in-out 1.5s infinite; }
+        .ascii.f4 { animation: asciiIn 1.5s ease forwards, bob4 8s ease-in-out 1.5s infinite; }
+        .ascii.f5 { animation: asciiIn 1.5s ease forwards, bob5 10s ease-in-out 1.5s infinite; }
+
+        @keyframes bob1 {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes bob2 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1.5deg); }
+        }
+        @keyframes bob3 {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes bob4 {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1deg); }
+        }
+        @keyframes bob5 {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        /* Positions — spread out to avoid overlap */
+        .ascii-1  { top: 3%;  left: 6%; }
+        .ascii-2  { top: 22%; left: 4%; }
+        .ascii-3  { top: 42%; left: 7%; }
+        .ascii-4  { top: 62%; left: 3%; }
+        .ascii-5  { top: 4%;  right: 5%; }
+        .ascii-6  { top: 24%; right: 4%; }
+        .ascii-7  { top: 44%; right: 6%; }
+        .ascii-8  { top: 64%; right: 3%; }
+        .ascii-10 { top: 82%; left: 8%; }
+        .ascii-11 { top: 13%; left: 14%; }
+        .ascii-12 { top: 84%; right: 7%; }
+        .ascii-13 { top: 52%; left: 13%; }
+        .ascii-14 { top: 34%; right: 13%; }
+
+        /* Mail carrier — flies across the screen */
+        .ascii-9 {
+            position: absolute;
+            animation: mailFly 22s linear 2s infinite !important;
+            opacity: 0 !important;
+        }
+
+        @keyframes mailFly {
+            0% {
+                left: -400px;
+                top: 82%;
+                opacity: 0;
+            }
+            4% { opacity: 0.7; }
+            50% { top: 78%; }
+            96% { opacity: 0.7; }
+            100% {
+                left: calc(100% + 100px);
+                top: 75%;
+                opacity: 0;
+            }
+        }
+
+        /* ═══════════════════════════════════════
+           PAPER PLANE — flies across the screen
+           ═══════════════════════════════════════ */
+        .plane {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #b0b0b0;
+            white-space: pre;
+            line-height: 1.15;
+            user-select: none;
+            pointer-events: none;
+            animation: flyAcross 24s linear infinite;
+            opacity: 0;
+        }
+
+        .plane-2 {
+            animation: flyAcross2 30s linear 8s infinite;
+            font-size: 9px;
+            color: #bbb;
+        }
+
+        .plane-3 {
+            animation: flyAcross3 36s linear 18s infinite;
+            font-size: 8px;
+            color: #c5c5c5;
+        }
+
+        @keyframes flyAcross {
+            0% {
+                left: -450px;
+                top: 15%;
+                opacity: 0;
+            }
+            4% { opacity: 0.8; }
+            30% { top: 12%; }
+            55% { top: 17%; }
+            80% { top: 13%; }
+            96% { opacity: 0.8; }
+            100% {
+                left: calc(100% + 150px);
+                top: 10%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes flyAcross2 {
+            0% {
+                right: -400px;
+                left: auto;
+                top: 50%;
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+            4% { opacity: 0.6; }
+            35% { top: 47%; }
+            60% { top: 53%; transform: scaleX(-1); }
+            96% { opacity: 0.6; }
+            100% {
+                right: calc(100% + 150px);
+                left: auto;
+                top: 46%;
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+        }
+
+        @keyframes flyAcross3 {
+            0% {
+                left: -400px;
+                top: 78%;
+                opacity: 0;
+            }
+            4% { opacity: 0.5; }
+            40% { top: 75%; }
+            65% { top: 80%; }
+            96% { opacity: 0.5; }
+            100% {
+                left: calc(100% + 150px);
+                top: 73%;
+                opacity: 0;
+            }
+        }
+
+        /* Twinkling stars */
+        .twinkle {
+            position: absolute;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            color: #aaa;
+            user-select: none;
+            pointer-events: none;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .twinkle:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .twinkle:nth-child(2) { top: 18%; right: 16%; animation-delay: 0.8s; }
+        .twinkle:nth-child(3) { top: 36%; left: 18%; animation-delay: 1.6s; }
+        .twinkle:nth-child(4) { top: 58%; right: 18%; animation-delay: 0.4s; }
+        .twinkle:nth-child(5) { top: 76%; left: 20%; animation-delay: 1.2s; }
+        .twinkle:nth-child(6) { top: 30%; left: 22%; animation-delay: 2.0s; }
+        .twinkle:nth-child(7) { top: 48%; right: 16%; animation-delay: 0.6s; }
+        .twinkle:nth-child(8) { top: 72%; right: 20%; animation-delay: 1.8s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #b8b8b8;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .particle.p1 { top: 12%; left: 18%; animation: particleFloat1 12s ease-in-out infinite; }
+        .particle.p2 { top: 28%; right: 20%; animation: particleFloat2 15s ease-in-out infinite; }
+        .particle.p3 { top: 50%; left: 16%; animation: particleFloat3 10s ease-in-out infinite; }
+        .particle.p4 { top: 70%; right: 18%; animation: particleFloat1 14s ease-in-out 2s infinite; }
+        .particle.p5 { top: 40%; left: 22%; animation: particleFloat2 11s ease-in-out 1s infinite; }
+        .particle.p6 { top: 82%; left: 19%; animation: particleFloat3 13s ease-in-out 3s infinite; }
+
+        @keyframes particleFloat1 {
+            0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+            25% { transform: translate(8px, -12px); opacity: 0.6; }
+            50% { transform: translate(-4px, -20px); opacity: 0.3; }
+            75% { transform: translate(6px, -8px); opacity: 0.5; }
+        }
+
+        @keyframes particleFloat2 {
+            0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+            33% { transform: translate(-10px, -15px); opacity: 0.6; }
+            66% { transform: translate(5px, -25px); opacity: 0.2; }
+        }
+
+        @keyframes particleFloat3 {
+            0%, 100% { transform: translate(0, 0); opacity: 0.25; }
+            50% { transform: translate(12px, -18px); opacity: 0.55; }
+        }
+
+        /* ═══════════════════════════════════════
+           PAGE LAYOUT
+           ═══════════════════════════════════════ */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        /* ═══════════════════════════════════════
+           HERO SECTION
+           ═══════════════════════════════════════ */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eef0ff;
+            border-radius: 100px;
+            padding: 8px 20px;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #4f46e5;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 400;
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .hero .sub {
+            font-size: 16px;
+            color: #777;
+            max-width: 480px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════
+           SUBSCRIBE FORM
+           ═══════════════════════════════════════ */
+        .form-row {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            max-width: 440px;
+            margin: 0 auto 20px;
+        }
+
+        .form-row input[type="email"] {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            background: #fff;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .form-row input[type="email"]::placeholder {
+            color: #b5b5b5;
+        }
+
+        .form-row input[type="email"]:focus {
+            border-color: #999;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.03);
+        }
+
+        .form-row button {
+            padding: 14px 24px;
+            border: 1.5px solid #1a1a1a;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .form-row button:hover {
+            background: #333;
+            border-color: #333;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+
+        .form-row button:active {
+            transform: scale(0.97);
+        }
+
+        .proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+            flex-shrink: 0;
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
+        .proof span {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        /* ═══════════════════════════════════════
+           DIVIDER
+           ═══════════════════════════════════════ */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #e0e0e0;
+            margin: 64px auto;
+        }
+
+        /* Animated divider variant */
+        .divider.reveal {
+            width: 0;
+            transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .divider.reveal.visible {
+            width: 60px;
+            opacity: 1;
+            transform: none;
+        }
+
+        /* ═══════════════════════════════════════
+           COMPARISON SECTION
+           ═══════════════════════════════════════ */
+        .compare h2 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(26px, 4vw, 38px);
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.2;
+            color: #1a1a1a;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .compare-col {
+            padding: 28px 24px;
+            border-radius: 14px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .compare-col:hover {
+            transform: translateY(-2px);
+        }
+
+        .compare-col.bad {
+            background: #fff5f5;
+            border: 1px solid #fee2e2;
+        }
+
+        .compare-col.bad:hover {
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.06);
+        }
+
+        .compare-col.good {
+            background: #f0fdf4;
+            border: 1px solid #dcfce7;
+        }
+
+        .compare-col.good:hover {
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.08);
+        }
+
+        .compare-col h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .compare-col.bad h3 { color: #ef4444; }
+        .compare-col.good h3 { color: #22c55e; }
+
+        .compare-col ul {
+            list-style: none;
+        }
+
+        .compare-col ul li {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .compare-col ul li:last-child {
+            border-bottom: none;
+        }
+
+        .compare-col ul li::before {
+            flex-shrink: 0;
+            font-size: 13px;
+            margin-top: 1px;
+        }
+
+        .compare-col.bad ul li::before {
+            content: "\00d7";
+            color: #ef4444;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+        }
+
+        .compare-col.good ul li::before {
+            content: "+";
+            color: #22c55e;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+        }
+
+        /* ═══════════════════════════════════════
+           EMAIL MOCKUP
+           ═══════════════════════════════════════ */
+        .email-mock {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+        }
+
+        .email-mock:hover {
+            box-shadow: 0 8px 40px rgba(0,0,0,0.07);
+            transform: translateY(-2px);
+        }
+
+        .email-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #999;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+            background: #fcfcfc;
+        }
+
+        .email-header strong {
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .email-body {
+            padding: 28px 24px 32px;
+        }
+
+        .email-body p {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 18px;
+        }
+
+        .email-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .email-body .sig {
+            margin-top: 28px;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 18px;
+            font-style: italic;
+            color: #1a1a1a;
+        }
+
+        /* ═══════════════════════════════════════
+           FAQ SECTION
+           ═══════════════════════════════════════ */
+        .faq h2 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(26px, 4vw, 38px);
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 32px;
+            color: #1a1a1a;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .faq-item:first-child {
+            border-top: 1px solid #eee;
+        }
+
+        .faq-q {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            cursor: pointer;
+            user-select: none;
+            gap: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .faq-q:hover {
+            opacity: 0.7;
+        }
+
+        .faq-q span {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .faq-q .icon {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            color: #999;
+            flex-shrink: 0;
+            width: 20px;
+            text-align: center;
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .faq-a p {
+            font-size: 14px;
+            color: #777;
+            line-height: 1.7;
+            padding-bottom: 20px;
+        }
+
+        .faq-item.open .faq-a {
+            max-height: 200px;
+        }
+
+        .faq-item.open .icon {
+            transform: rotate(45deg);
+        }
+
+        /* ═══════════════════════════════════════
+           BOTTOM CTA
+           ═══════════════════════════════════════ */
+        .bottom-cta {
+            text-align: center;
+            padding: 20px 0 0;
+        }
+
+        .bottom-cta h2 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(24px, 4vw, 34px);
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .bottom-cta .sub {
+            font-size: 15px;
+            color: #888;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        /* ═══════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════ */
+        .footer {
+            text-align: center;
+            padding: 60px 24px 40px;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #999;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #1a1a1a;
+        }
+
+        .footer-copy {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: #ccc;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .footer-credit {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: #ddd;
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════════
+           RESPONSIVE
+           ═══════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .ascii { font-size: 10px; }
+            .plane { font-size: 6px; }
+            .plane-2, .plane-3 { display: none; }
+        }
+
+        @media (max-width: 700px) {
+            .ascii-bg { display: none; }
+
+            body::before { background-size: 24px 24px; }
+
+            .page { padding: 40px 20px 60px; }
+
+            .hero { padding: 20px 0 40px; }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-row button {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .compare-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .email-header { padding: 16px 18px; }
+            .email-body { padding: 20px 18px 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════════ ASCII ART BACKGROUND ════════ -->
+    <div class="ascii-bg">
+
+        <!-- Cloud 1: top-left -->
+        <div class="ascii ascii-1 f1">
+    ( ¯  )_
+   (   .  )
+   (_._( ._)</div>
+
+        <!-- Cloud 2: mid-left -->
+        <div class="ascii ascii-2 f3">
+      ( ¯  )_
+     (  .   )
+     (_._( ._)</div>
+
+        <!-- Cloud 3: lower-left -->
+        <div class="ascii ascii-3 f5">
+   ( ¯  )_
+  (   .  )
+  (_._( ._)</div>
+
+        <!-- Cloud 4: far-left bottom -->
+        <div class="ascii ascii-4 f4">
+     ( ¯  )_
+    (  .   )
+    (_._( ._)</div>
+
+        <!-- Cloud 5: top-right -->
+        <div class="ascii ascii-5 f2">
+    ( ¯  )_
+   (   .  )
+   (_._( ._)</div>
+
+        <!-- Cloud 6: mid-right -->
+        <div class="ascii ascii-6 f4">
+      ( ¯  )_
+     (  .   )
+     (_._( ._)</div>
+
+        <!-- Cloud 7: lower-right -->
+        <div class="ascii ascii-7 f1">
+   ( ¯  )_
+  (   .  )
+  (_._( ._)</div>
+
+        <!-- Cloud 8: far-right bottom -->
+        <div class="ascii ascii-8 f3">
+     ( ¯  )_
+    (  .   )
+    (_._( ._)</div>
+
+        <!-- Mail plane: flies across -->
+        <div class="ascii ascii-9 f2">
+                                       /\     \
++-------------------------+      |\  ___\_\___
+| SEE YOU IN YOUR INBOX   |====~=\c'""""""""" "')
++-------------------------+       '~~~~~/ /~~'
+                                   -==/ /
+                                     '-'</div>
+
+        <!-- Cloud 9: bottom-left -->
+        <div class="ascii ascii-10 f3">
+    ( ¯  )_
+   (   .  )
+   (_._( ._)</div>
+
+        <!-- Cloud 10: upper-left inner -->
+        <div class="ascii ascii-11 f1">
+      ( ¯  )_
+     (  .   )
+     (_._( ._)</div>
+
+        <!-- Cloud 11: bottom-right -->
+        <div class="ascii ascii-12 f4">
+   ( ¯  )_
+  (   .  )
+  (_._( ._)</div>
+
+        <!-- Cloud 12: mid-left inner -->
+        <div class="ascii ascii-13 f5">
+    ( ¯  )_
+   (  .   )
+   (_._( ._)</div>
+
+        <!-- Cloud 13: mid-right inner -->
+        <div class="ascii ascii-14 f2">
+      ( ¯  )_
+     (   .  )
+     (_._( ._)</div>
+
+        <!-- ── Propeller planes flying across ── -->
+        <div class="plane">
+              -=\' \
+             |\  ____\_\__
+    |=====- =\c '"""""""" "')
+              '~~~~~/ /~~'
+               -==/ /
+                 '-'</div>
+
+        <div class="plane plane-2">
+           -=\' \
+          |\  ____\_\__
+ |=====- =\c '"""""""" "')
+           '~~~~~/ /~~'
+            -==/ /
+              '-'</div>
+
+        <div class="plane plane-3">
+            -=\' \
+           |\  ____\_\__
+  |=====- =\c '"""""""" "')
+            '~~~~~/ /~~'
+             -==/ /
+               '-'</div>
+
+        <!-- ── Twinkling stars ── -->
+        <div class="twinkle">+</div>
+        <div class="twinkle">*</div>
+        <div class="twinkle">+</div>
+        <div class="twinkle">*</div>
+        <div class="twinkle">.</div>
+        <div class="twinkle">+</div>
+        <div class="twinkle">*</div>
+        <div class="twinkle">.</div>
+
+        <!-- ── Floating particles ── -->
+        <div class="particle p1"></div>
+        <div class="particle p2"></div>
+        <div class="particle p3"></div>
+        <div class="particle p4"></div>
+        <div class="particle p5"></div>
+        <div class="particle p6"></div>
+
+    </div>
+
+    <!-- ════════ PAGE CONTENT ════════ -->
+    <div class="page">
+
+        <!-- ──── HERO ──── -->
+        <section class="hero">
+            <div class="badge hero-enter">Twenty84 Newsletter</div>
+
+            <h1 class="hero-enter">The practical AI newsletter<br>for builders &amp; operators</h1>
+
+            <p class="sub hero-enter">
+                Weekly workflows, playbooks, and tools that help you
+                build faster, stay lean, and turn AI into real business leverage.
+                Built for Africa.
+            </p>
+
+            <form class="form-row hero-enter" onsubmit="handleSignup(event)">
+                <input type="email" placeholder="Enter your email" required aria-label="Email address">
+                <button type="submit">Join Free</button>
+            </form>
+
+            <div class="proof hero-enter">
+                <div class="dot"></div>
+                <span>Join readers every Thursday</span>
+            </div>
+        </section>
+
+        <div class="divider reveal"></div>
+
+        <!-- ──── COMPARISON ──── -->
+        <section class="compare">
+            <h2 class="reveal">Most AI newsletters<br>are noise</h2>
+
+            <div class="compare-grid">
+                <div class="compare-col bad reveal-scale">
+                    <h3>AI Noise</h3>
+                    <ul class="reveal-stagger">
+                        <li>Written by content farms, not builders</li>
+                        <li>Broad news that doesn't apply to your work</li>
+                        <li>Rehashed announcements you've already seen</li>
+                        <li>Walls of text you skim and delete</li>
+                        <li>Built for clicks, not for you</li>
+                    </ul>
+                </div>
+                <div class="compare-col good reveal-scale">
+                    <h3>Twenty84</h3>
+                    <ul class="reveal-stagger">
+                        <li>Written by operators who build with AI daily</li>
+                        <li>Workflows you can use this week</li>
+                        <li>Tools worth your time &mdash; vetted, not trending</li>
+                        <li>Strategies for builders, not enterprises</li>
+                        <li>One email, every Thursday, no filler</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider reveal"></div>
+
+        <!-- ──── EMAIL MOCKUP ──── -->
+        <section class="email-mock reveal-scale">
+            <div class="email-header">
+                <strong>To:</strong> You<br>
+                <strong>From:</strong> Wihan @ Twenty84<br>
+                <strong>Subject:</strong> Why I started this newsletter
+            </div>
+            <div class="email-body">
+                <p>
+                    We're living through a special time right now. Thanks to AI, you can do more
+                    as one person &mdash; with less time, work, and money &mdash; than an entire
+                    business could do in the past.
+                </p>
+                <p>
+                    The problem is&hellip; AI moves fast. Really fast. New tools every day,
+                    constant updates, endless hype. Especially if you're building in Africa,
+                    the signal-to-noise ratio is brutal.
+                </p>
+                <p>
+                    You don't have time to live on X, read every release, or watch hours
+                    of YouTube just to keep up. You're trusting me to cut through all of it &mdash;
+                    to test the tools, read the releases, watch the demos, and bring you
+                    only what matters.
+                </p>
+                <p>
+                    That means the world to me. I don't take that lightly.
+                </p>
+                <p>
+                    Every Thursday, you'll get one email with everything you need to
+                    stay up to date and actually use AI to grow your business.
+                    Capital. Systems. AI. That's what we do.
+                </p>
+                <p>
+                    Most newsletters have it automated &mdash; you're receiving AI slop.
+                    I write this newsletter by hand, every week. Read it and you can tell.
+                </p>
+                <p class="sig">&mdash; Wihan</p>
+            </div>
+        </section>
+
+        <div class="divider reveal"></div>
+
+        <!-- ──── FAQ ──── -->
+        <section class="faq">
+            <h2 class="reveal">Questions?</h2>
+
+            <div class="faq-item reveal">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span>Is this newsletter really free?</span>
+                    <span class="icon">+</span>
+                </div>
+                <div class="faq-a">
+                    <p>Yes, completely free. I share my best workflows without a paywall because I believe builders deserve real leverage, not locked content. No catch, no upsells hiding behind the signup.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span>How often will I receive emails?</span>
+                    <span class="icon">+</span>
+                </div>
+                <div class="faq-a">
+                    <p>Once a week, typically on Thursday mornings. No spam, no daily "tips," just one actionable newsletter you can implement that day. Your inbox will thank you.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span>Do I need to be technical to use these workflows?</span>
+                    <span class="icon">+</span>
+                </div>
+                <div class="faq-a">
+                    <p>Not at all. I write for tech-curious, non-technical people. If you can use ChatGPT and a spreadsheet, you can implement everything I share. No coding required &mdash; ever.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-q" onclick="toggleFaq(this)">
+                    <span>Can I unsubscribe anytime?</span>
+                    <span class="icon">+</span>
+                </div>
+                <div class="faq-a">
+                    <p>Absolutely. One click at the bottom of any email and you're out. No hard feelings, no guilt trips, no "are you sure?" popups. Your inbox, your rules.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider reveal"></div>
+
+        <!-- ──── BOTTOM CTA ──── -->
+        <section class="bottom-cta">
+            <h2 class="reveal">Ready to build smarter?</h2>
+            <p class="sub reveal">Join the newsletter. One email every Thursday.</p>
+
+            <form class="form-row reveal" onsubmit="handleSignup(event)">
+                <input type="email" placeholder="Enter your email" required aria-label="Email address">
+                <button type="submit">Join Free</button>
+            </form>
+
+            <div class="proof reveal">
+                <div class="dot"></div>
+                <span>Join readers every Thursday</span>
+            </div>
+        </section>
+    </div>
+
+    <!-- ════════ FOOTER ════════ -->
+    <div class="footer reveal">
+        <div class="footer-links">
+            <a href="https://twenty84.beehiiv.com" target="_blank">Post Archive</a>
+            <a href="https://www.twenty84.ai" target="_blank">Website</a>
+            <a href="mailto:hello@twenty84.ai">Contact</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Twenty84. All rights reserved.</p>
+        <p class="footer-credit">Built with Claude Code</p>
+    </div>
+
+    <script>
+        // ── Scroll reveal (IntersectionObserver) ──
+        (function() {
+            var els = document.querySelectorAll('.reveal, .reveal-scale, .reveal-stagger');
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+            els.forEach(function(el) { observer.observe(el); });
+        })();
+
+        // ── Parallax ASCII on scroll ──
+        (function() {
+            var asciiEls = document.querySelectorAll('.ascii');
+            var ticking = false;
+
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    requestAnimationFrame(function() {
+                        var scrollY = window.scrollY;
+                        asciiEls.forEach(function(el, i) {
+                            var speed = 0.02 + (i % 4) * 0.01;
+                            var y = scrollY * speed * (i % 2 === 0 ? -1 : 1);
+                            el.style.transform = 'translateY(' + y + 'px)';
+                        });
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+
+        // ── Form signup ──
+        function handleSignup(e) {
+            e.preventDefault();
+            var btn = e.target.querySelector('button');
+            var input = e.target.querySelector('input');
+            var email = input.value;
+            var orig = btn.textContent;
+
+            btn.textContent = 'Joining...';
+            btn.style.opacity = '0.7';
+
+            setTimeout(function() {
+                window.open('https://twenty84.beehiiv.com/subscribe?email=' + encodeURIComponent(email), '_blank');
+                btn.textContent = "You're in!";
+                btn.style.opacity = '1';
+                btn.style.background = '#22c55e';
+                btn.style.borderColor = '#22c55e';
+                input.value = '';
+
+                setTimeout(function() {
+                    btn.textContent = orig;
+                    btn.style.background = '#1a1a1a';
+                    btn.style.borderColor = '#1a1a1a';
+                }, 3000);
+            }, 600);
+        }
+
+        // ── FAQ accordion ──
+        function toggleFaq(el) {
+            var item = el.parentElement;
+            var isOpen = item.classList.contains('open');
+
+            document.querySelectorAll('.faq-item').forEach(function(i) {
+                i.classList.remove('open');
+            });
+
+            if (!isOpen) {
+                item.classList.add('open');
+            }
+        }
+    </script>
+
+</body>
+</html>
